@@ -7,10 +7,6 @@ import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import java.util.Calendar;
-import java.text.SimpleDateFormat;
-
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -82,7 +78,6 @@ public class DbTest {
     @Test
     public void testLogWrite() {
 
-        //set level for handling
         log.setLevel(Level.DEBUG);
 
         try {
