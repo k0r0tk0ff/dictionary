@@ -26,20 +26,9 @@ public class MainServlet extends HttpServlet {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         //request.getRequestDispatcher("link.html").include(request, response);
-        request.getRequestDispatcher("index.html").include(request, response);
+        request.getRequestDispatcher("index.jsp").include(request, response);
 
-        String name = request.getParameter("name");
-        String password = request.getParameter("password");
 
-        if (password.equals("a")) {
-            out.print(String.format("<center><h2> Welcome, %s </center></h2>", name));
-            HttpSession session = request.getSession();
-            session.setAttribute("name", name);
-            out.print(String.format("<center><h2> SessionID = %s </center></h2>", session.getId()));
-        } else {
-            out.print("<center><h2> Sorry, username or password error! </h2></center>");
-            request.getRequestDispatcher("login.jsp").include(request, response);
-        }
         out.close();
     }
 
