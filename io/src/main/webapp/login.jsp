@@ -23,17 +23,18 @@
     <h1>Login page</h1>
     <form id="loginform" action="LoginServlet" method="post" class="form-horizontal" role="form">
         <div style="margin-bottom: 25px" class="input-group">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-            <input id="name" type="text" class="form-control" name="name" placeholder="Enter your name">
-        </div>
-        <div style="margin-bottom: 25px" class="input-group">
-            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-            <input id="password" type="password" class="form-control" name="password" placeholder="password">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
+            <input id="wordForTranslate" type="wordForTranslate" class="form-control" name="password" placeholder="wordForTranslate">
         </div>
         <div style="margin-top:10px" class="form-group">
             <div class="col-sm-12 controls">
                 <input type="submit" class="btn btn-default pull-right" value="Login">
             </div>
+        </div>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">Translated word</div>
+            <div class="panel-body">Panel Content</div>
         </div>
     </form>
 </div>

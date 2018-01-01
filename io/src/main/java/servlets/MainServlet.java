@@ -25,7 +25,8 @@ public class MainServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        request.getRequestDispatcher("link.html").include(request, response);
+        //request.getRequestDispatcher("link.html").include(request, response);
+        request.getRequestDispatcher("index.html").include(request, response);
 
         String name = request.getParameter("name");
         String password = request.getParameter("password");
