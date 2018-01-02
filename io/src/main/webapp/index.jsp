@@ -33,7 +33,6 @@
         <div class="panel panel-info">
             <div class="panel-heading">Translated word</div>
             <div class="panel-body"><c:out value="${result}"/></div>
-            <%--<div class="panel-body"><%= request.getAttribute("result")%></div>--%>
         </div>
     </form>
 </div>
