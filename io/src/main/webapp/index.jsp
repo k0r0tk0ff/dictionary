@@ -1,9 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page language="java" pageEncoding="UTF-8" session="true"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@page contentType="text/html;charset=UTF-8" language="java" %>
+<%@page language="java" pageEncoding="UTF-8" session="true"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page session="true"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,6 +33,11 @@
         <div class="panel panel-info">
             <div class="panel-heading">Translated word</div>
             <div class="panel-body"><c:out value="${result}"/></div>
+        </div>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">Русские буквы</div>
+            <div class="panel-body"><c:out value="${russ}"/></div>
         </div>
     </form>
 </div>
