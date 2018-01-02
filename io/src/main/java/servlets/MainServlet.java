@@ -23,11 +23,13 @@ public class MainServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        String result = "asdf";
+
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        //request.getRequestDispatcher("link.html").include(request, response);
+        request.setAttribute("result", result);
         request.getRequestDispatcher("index.jsp").include(request, response);
-
 
         out.close();
     }

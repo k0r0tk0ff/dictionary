@@ -1,9 +1,3 @@
-<!--<form action="LoginServlet" method="post">
-    Name:<input type="text" name="name"><br>
-    Password:<input type="password" name="password"><br>
-    <input type="submit" value="login">
-</form>-->
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page language="java" pageEncoding="UTF-8" session="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -21,10 +15,14 @@
 
 <div class="container">
     <h1>Login page</h1>
-    <form id="loginform" action="LoginServlet" method="post" class="form-horizontal" role="form">
+    <form id="loginform" action="MainServlet" method="post" class="form-horizontal" role="form">
         <div style="margin-bottom: 25px" class="input-group">
             <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
-            <input id="wordForTranslate" type="wordForTranslate" class="form-control" name="password" placeholder="wordForTranslate">
+            <input id="wordForTranslate"
+                   type="wordForTranslate"
+                   class="form-control"
+                   name="wordForTranslate"
+                   placeholder="wordForTranslate">
         </div>
         <div style="margin-top:10px" class="form-group">
             <div class="col-sm-12 controls">
@@ -34,7 +32,8 @@
 
         <div class="panel panel-info">
             <div class="panel-heading">Translated word</div>
-            <div class="panel-body">Panel Content</div>
+            <div class="panel-body"><c:out value="${result}"/></div>
+            <%--<div class="panel-body"><%= request.getAttribute("result")%></div>--%>
         </div>
     </form>
 </div>

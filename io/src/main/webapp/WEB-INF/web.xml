@@ -12,7 +12,7 @@
 http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
              id="WebApp_ID" version="3.0">
 
-    <display-name>Servlet_HttpSession_Login_and_Logout_Example</display-name>
+    <display-name>Dictionary</display-name>
 
     <servlet>
         <servlet-name>MainServlet</servlet-name>
