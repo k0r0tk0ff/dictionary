@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Locale;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +20,6 @@ public class MainServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        //Locale.setDefault(new Locale("en"));
-
         YandexApiExe yaApi = YandexApiExe.getInstance();
 
         String result = null;
@@ -31,16 +30,27 @@ public class MainServlet extends HttpServlet {
             log.error(e);
         }
 
-        System.out.println(result);
-        System.out.println(Locale.getDefault());
-
         response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
+        //PrintWriter out = response.getWriter();
+
         request.setAttribute("result", result);
-        //request.setCharacterEncoding("UTF-8");
-        //response.setCharacterEncoding("UTF-8");
+
+        request.setCharacterEncoding("UTF-8");
+
+
+
         request.getRequestDispatcher("index.jsp").include(request, response);
 
-        out.close();
+/*        RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/index.jsp");
+        requestDispatcher.forward(request, response);*/
+
+        //out.close();
     }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+       // request.setCharacterEncoding("UTF-8");
+    }
+
 }
