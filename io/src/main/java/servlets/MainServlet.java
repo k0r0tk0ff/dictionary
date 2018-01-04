@@ -22,6 +22,8 @@ public class MainServlet extends HttpServlet {
 
         YandexApiExe yaApi = YandexApiExe.getInstance();
 
+        request.setCharacterEncoding("UTF-8");
+
         String result = null;
         try {
             result = yaApi.doGetTranslatedWord(request.getParameter("wordForTranslate"));
@@ -30,14 +32,9 @@ public class MainServlet extends HttpServlet {
             log.error(e);
         }
 
-        response.setContentType("text/html");
-        //PrintWriter out = response.getWriter();
+        response.setCharacterEncoding("UTF-8");
 
         request.setAttribute("result", result);
-
-        request.setCharacterEncoding("UTF-8");
-
-
 
         request.getRequestDispatcher("index.jsp").include(request, response);
 
@@ -51,6 +48,7 @@ public class MainServlet extends HttpServlet {
             throws ServletException, IOException {
 
        // request.setCharacterEncoding("UTF-8");
+        System.out.println(String.format("(do get) request.getCharacterEncoding() = %s",request.getCharacterEncoding()));
     }
 
 }
