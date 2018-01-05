@@ -9,8 +9,10 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>io</module>
+        <module>yandex</module>
         <module>db</module>
+        <module>web</module>
+        <module>main</module>
     </modules>
 
     <build>
@@ -21,13 +23,11 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>dictionary.io.src.main.java.MainIO</mainClass>
+                            <mainClass>dictionary.main.src.main.java.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-
 </project>

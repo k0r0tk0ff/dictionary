@@ -1,9 +1,11 @@
+
+
 import businesslogic.YandexApiExe;
 
-public class MainIO {
-    public static void main(String[] arg) {
+public class Main {
 
-        MainIO main = new MainIO();
+    public static void main(String[] args) {
+        Main main = new Main();
         String asdf = "town";
         main.doSomeTranslate(asdf);
 
@@ -19,5 +21,4 @@ public class MainIO {
             e.printStackTrace();
         }
     }
-
 }
