@@ -24,20 +24,9 @@ public class Utf8PostReqFilter implements Filter{
                          FilterChain chain) throws ServletException, IOException {
         String contentType = req.getContentType();
 
-
-
-        System.out.println(String.format("contentType = %s", contentType));
-
-
         if (contentType != null && contentType.startsWith(FILTERABLE_CONTENT_TYPE))
             req.setCharacterEncoding(encoding);
         chain.doFilter(req, resp);
-
-        String contentTypeForGet = req.getCharacterEncoding();
-
-        System.out.println("Filter work");
-        System.out.println(req.getCharacterEncoding());
-        System.out.println(String.format("CharacterEncoding = %s", contentTypeForGet));
     }
 
     public void init(FilterConfig config) throws ServletException{
