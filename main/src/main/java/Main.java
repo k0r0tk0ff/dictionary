@@ -13,7 +13,7 @@ public class Main {
 
     void doSomeTranslate(String asdf) {
 
-        YandexApiExe ya = new YandexApiExe();
+        YandexApiExe ya = YandexApiExe.getInstance();
         try {
             System.out.println(ya.doGetTranslatedWord(asdf));
             System.out.println();
