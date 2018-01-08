@@ -1,17 +1,19 @@
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+
 import org.junit.Test;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by user on 1/7/2018.
  */
 public class WebTest {
-    private static final Logger log = Logger.getLogger(WebTest.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(WebTest.class);
 
     @Test
     public void testLogWrite() {
 
-        log.setLevel(Level.DEBUG);
+
 
         try {
             if (log.isDebugEnabled()) {

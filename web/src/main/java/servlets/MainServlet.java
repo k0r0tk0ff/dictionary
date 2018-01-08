@@ -12,13 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 
 public class MainServlet extends HttpServlet {
 
-    Logger log  = LoggerFactory.getLogger(MainServlet.class);
+    Logger log;
 
-/*
+
     public void init() {
-        this.log = Logger.getLogger(MainServlet.class);
+        this.log = LoggerFactory.getLogger(MainServlet.class);
     }
-*/
+
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -34,9 +34,9 @@ public class MainServlet extends HttpServlet {
 
 
         try {
-                //yaApi = YandexApiExe.getInstance();
-                //result = yaApi.doGetTranslatedWord(request.getParameter("wordForTranslate"));
-                throw new Exception("afffff");
+                yaApi = YandexApiExe.getInstance();
+                result = yaApi.doGetTranslatedWord(request.getParameter("wordForTranslate"));
+                //throw new Exception("afffff");
             } catch (Exception e) {
                 log.error(e.getMessage());
                 log.debug(" Test MainServlet debug");

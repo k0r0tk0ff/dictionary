@@ -78,10 +78,9 @@ public class DbTest {
     @Test
     public void testLogWrite() {
 
-
-        //System.out.println("aaaaaaaaaaaaaaaaaa");
-        //System.out.println(log.isDebugEnabled());
-
+        log.debug("Debug message (do not use isDebugEnabled)");
+        log.error("Error message (do not use isDebugEnabled)");
+        log.info("Info message (do not use isDebugEnabled)");
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Start method testLogWrite()");
@@ -89,7 +88,7 @@ public class DbTest {
                 log.error(" Test Error-facility message");
                 log.info(" Test Info-facility message ");
                 log.debug("End method testLogWrite()");
-                System.out.println("Log write success. (see my.log)");
+                System.out.println("Log write success. (see db.log)");
             }
         } catch (Exception e) {
             e.printStackTrace();

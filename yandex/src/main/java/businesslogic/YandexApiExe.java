@@ -82,6 +82,12 @@ public class YandexApiExe {
         //remove first 2 and last 2 symbols
         result = raw.substring(2, raw.length() - 2);
 
+        if(result.equals("")) {
+            log.error(String.format("Req = %s.Result in null.", wordForTranslate));
+        } else {
+            log.info(String.format("Req = %s.Result in null.", wordForTranslate));
+        }
+
         return result;
     }
 

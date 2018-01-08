@@ -6,8 +6,8 @@
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
             </PatternLayout>
         </Console>
-        <RollingFile name="RollingFile" fileName="../logs/db.log"
-                     filePattern="$${date:yyyy-MM}/db-%d{MM-dd-yyyy}-%i.log.gz">
+        <RollingFile name="RollingFile" fileName="logs/main.log"
+                     filePattern="$${date:yyyy-MM}/main-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout>
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
             </PatternLayout>
@@ -19,12 +19,11 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="DbTest" level="info" additivity="false">
+        <Logger name="Main" level="info" additivity="false">
             <AppenderRef ref="RollingFile" />
             <AppenderRef ref="Console" />
         </Logger>
         <Root level="error">
-        <!--<Root level="debug">-->
             <AppenderRef ref="Console" level="debug"/>
             <AppenderRef ref="RollingFile" level="error"/>
         </Root>
