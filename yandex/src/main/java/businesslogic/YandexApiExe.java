@@ -7,10 +7,11 @@ import org.apache.http.client.methods.HttpGet;
 
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +23,8 @@ public class YandexApiExe {
     private static Properties properties;
     private InputStream input = null;
     private String yandexApiKey;
-    private static final Logger log = Logger.getLogger(YandexApiExe.class.getName());
+    //private static final Logger log = Logger.getLogger(YandexApiExe.class.getName());
+    private static final Logger log  = LoggerFactory.getLogger(YandexApiExe.class);
 
     private YandexApiExe() {
 

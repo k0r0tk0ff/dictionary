@@ -1,7 +1,6 @@
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.junit.Test;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.DriverManager;
 import java.sql.Connection;
@@ -11,7 +10,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class DbTest {
-    private static final Logger log = Logger.getLogger(DbTest.class.getName());
+
+    Logger log  = LoggerFactory.getLogger(DbTest.class);
 
     @Test
     public void loadDriverTest() throws Exception {
@@ -78,7 +78,9 @@ public class DbTest {
     @Test
     public void testLogWrite() {
 
-        log.setLevel(Level.DEBUG);
+
+        //System.out.println("aaaaaaaaaaaaaaaaaa");
+        //System.out.println(log.isDebugEnabled());
 
         try {
             if (log.isDebugEnabled()) {
@@ -96,8 +98,6 @@ public class DbTest {
     }
 
     private void handleExceptions(SQLException dataAccessError, SQLException closeConnectionError) {
-
-        log.setLevel(Level.DEBUG);
 
         log.debug("Start processing");
         if (log.isDebugEnabled()) {
