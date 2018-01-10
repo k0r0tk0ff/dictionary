@@ -13,6 +13,8 @@ public class Main {
         main.log.error("error from class Main");
         main.log.info("info from class Main");
 
+        main.doSomeTranslate("cat");
+
     }
 
     void doSomeTranslate(String asdf) {
@@ -20,7 +22,6 @@ public class Main {
         YandexApiExe ya = YandexApiExe.getInstance();
         try {
             System.out.println(ya.doGetTranslatedWord(asdf));
-            System.out.println();
         } catch (Exception e) {
             e.printStackTrace();
         }

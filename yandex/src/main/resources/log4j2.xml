@@ -6,7 +6,7 @@
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
             </PatternLayout>
         </Console>
-        <RollingFile name="RollingFile" fileName="../logs/yandexApi.log"
+        <RollingFile name="RollingFile" fileName="yandexApi.log"
                      filePattern="$${date:yyyy-MM}/db-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout>
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>

@@ -24,9 +24,11 @@ public class YandexApiExe {
     private InputStream input = null;
     private String yandexApiKey;
     //private static final Logger log = Logger.getLogger(YandexApiExe.class.getName());
-    private static final Logger log  = LoggerFactory.getLogger(YandexApiExe.class);
+    private Logger log = LoggerFactory.getLogger(YandexApiExe.class);
 
     private YandexApiExe() {
+
+
 
         properties = new Properties();
 
@@ -85,9 +87,9 @@ public class YandexApiExe {
         if(result.equals("")) {
             log.error(String.format("Req = %s.Result in null.", wordForTranslate));
         } else {
-            log.info(String.format("Req = %s.Result in null.", wordForTranslate));
+            log.info(String.format("Req = %s. Result in not null.", wordForTranslate));
         }
-
+        log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         return result;
     }
 

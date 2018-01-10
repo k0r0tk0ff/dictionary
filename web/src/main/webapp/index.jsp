@@ -32,6 +32,7 @@
             <div class="panel-heading">Translated word</div>
             <div class="panel-body"><c:out value="${result}"/></div>
         </div>
+        <h5>Use Yandex API</h5>
     </form>
 </div>
 
