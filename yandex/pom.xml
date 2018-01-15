@@ -63,6 +63,12 @@
             <artifactId>slf4j-ext</artifactId>
             <version>1.7.25</version>
         </dependency>
+        <!-- Detecter of language-->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-langdetect</artifactId>
+            <version>1.17</version>
+        </dependency>
         <!-- start add testing-->
         <dependency>
             <groupId>junit</groupId>

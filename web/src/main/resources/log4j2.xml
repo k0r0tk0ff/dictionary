@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration status="error">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout>
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
             </PatternLayout>
         </Console>
-        <RollingFile name="RollingFile" fileName="web.log"
+        <RollingFile name="RollingFile" fileName="e:\logs\web.log"
                      filePattern="$${date:yyyy-MM}/web-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout>
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
@@ -19,12 +19,11 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="MainServlet" level="info" additivity="false">
+        <Logger name="MainServlet" level="error" additivity="false">
             <AppenderRef ref="RollingFile" />
             <AppenderRef ref="Console" />
         </Logger>
-        <!--<Root level="error">-->
-        <Root level="debug">
+        <Root level="error">
             <AppenderRef ref="Console" level="debug"/>
             <AppenderRef ref="RollingFile" level="error"/>
         </Root>

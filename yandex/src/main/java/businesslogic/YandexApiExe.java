@@ -1,5 +1,22 @@
 package businesslogic;
 
+/*import com.google.common.base.Optional;
+import com.optimaize.langdetect.LanguageDetector;
+import com.optimaize.langdetect.LanguageDetectorBuilder;
+import com.optimaize.langdetect.i18n.LdLocale;
+import com.optimaize.langdetect.ngram.NgramExtractors;
+import com.optimaize.langdetect.profiles.LanguageProfile;
+import com.optimaize.langdetect.profiles.LanguageProfileReader;
+import com.optimaize.langdetect.text.CommonTextObjectFactories;
+import com.optimaize.langdetect.text.TextObject;
+import com.optimaize.langdetect.text.TextObjectFactory;*/
+
+import java.io.IOException;
+
+import org.apache.tika.langdetect.OptimaizeLangDetector;
+import org.apache.tika.language.detect.LanguageDetector;
+import org.apache.tika.language.detect.LanguageResult;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -8,6 +25,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -15,7 +33,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 public class YandexApiExe {
 
@@ -23,12 +44,10 @@ public class YandexApiExe {
     private static Properties properties;
     private InputStream input = null;
     private String yandexApiKey;
-    //private static final Logger log = Logger.getLogger(YandexApiExe.class.getName());
-    private Logger log = LoggerFactory.getLogger(YandexApiExe.class);
+
+    private final static Logger LOG = LoggerFactory.getLogger(YandexApiExe.class);
 
     private YandexApiExe() {
-
-
 
         properties = new Properties();
 
@@ -85,15 +104,15 @@ public class YandexApiExe {
         result = raw.substring(2, raw.length() - 2);
 
         if(result.equals("")) {
-            log.error(String.format("Req = %s.Result in null.", wordForTranslate));
+            LOG.error(String.format("Req = %s.Result in null.", wordForTranslate));
         } else {
-            log.info(String.format("Req = %s. Result in not null.", wordForTranslate));
+            LOG.info(String.format("Req = %s. Result in not null.", wordForTranslate));
         }
-        log.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
         return result;
     }
 
-    private String uriCreator(String wordForTranslate) {
+    private String uriCreator(String wordForTranslate) throws Exception{
 
 /*
  See
@@ -107,13 +126,41 @@ public class YandexApiExe {
  & [options=<опции перевода>]
  & [callback=<имя callback-функции>]
 */
+        String en2ru;
+        String ru2en;
+        String detectedLang;
+        String resolvedLn;
+
+        en2ru = "&lang=en-ru";
+        ru2en = "&lang=ru-en";
+
+        resolvedLn = doDetectLanguage(wordForTranslate);
+
+        if(resolvedLn.equals("ru")) {
+            detectedLang = ru2en;
+        } else {
+            detectedLang = en2ru;
+        }
+
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append("https://translate.yandex.net/api/v1.5/tr.json/translate");
-         stringBuilder.append(String.format("?key=%s",yandexApiKey));
+        stringBuilder.append(String.format("?key=%s",yandexApiKey));
         stringBuilder.append(String.format("&text=%s", wordForTranslate));
-        stringBuilder.append("&lang=en-ru");
+        stringBuilder.append(detectedLang);
 
         return stringBuilder.toString();
+    }
+
+    String doDetectLanguage(String wordForDetectLn) throws IOException {
+
+        Set<String> languages = new HashSet<String>();
+        languages.add("ru");
+        languages.add("en");
+
+        LanguageDetector detector = new OptimaizeLangDetector().loadModels(languages);
+        LanguageResult result = detector.detect(wordForDetectLn);
+
+        return result.getLanguage();
     }
 }
