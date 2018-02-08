@@ -2,17 +2,28 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.DriverManager;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class DbTest {
 
-    Logger log  = LoggerFactory.getLogger(DbTest.class);
+   //Logger log  = LoggerFactory.getLogger(DbTest.class);
 
+    @Test
+    public void loadDriverTestH2() throws Exception {
+
+        try {
+            Class.forName("org.h2.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Install H2 JDBC Driver!");
+            e.printStackTrace();
+            return;
+        }
+        System.out.println("H2 JDBC Driver Registered.");
+    }
+     /*
     @Test
     public void loadDriverTest() throws Exception {
 
@@ -24,20 +35,17 @@ public class DbTest {
             return;
         }
         System.out.println("PostgreSQL JDBC Driver Registered.");
-    }
+    }*/
 
     @Test
     public void loadPropertiesFromFile() throws Exception {
 
-        /*
-         *  Test load settings from file
-         *  (with private constructor)
-         */
         DbConnector connector = DbConnector.getInstance();
-        assertThat(connector.getValue("jdbc.username"), is("postgres"));
+        assertThat(connector.getPropertyValue("jdbc.username"), is("sa"));
         System.out.println("Read properties from file success.");
     }
 
+    /*
     @Test
     public void testConnectToDb() throws SQLException {
 
@@ -109,6 +117,32 @@ public class DbTest {
             log.error("Something failed", e);
         }
         log.debug("done");
+    }*/
+
+    @Test
+    public void createDb() {
+        String sql = "SELECT * FROM DICTIONARY;";
+        DbConnector connector = DbConnector.getInstance();
+
+        try {
+            connector.initializeConnection();
+            connector.createDb(connector.getConnection());
+
+            PreparedStatement pr = connector.getConnection().prepareStatement(sql);
+            ResultSet resultSet = pr.executeQuery();
+            while (resultSet.next()) {
+                String eng = resultSet.getString("ENG");
+                String ru = resultSet.getString("RU");
+                System.out.println(String.format("%s | %s", eng, ru));
+            }
+
+            System.out.println(resultSet.toString());
+
+            connector.closeConnection(connector.getConnection());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
 
