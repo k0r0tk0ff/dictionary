@@ -1,16 +1,6 @@
 package businesslogic;
 
-/*import com.google.common.base.Optional;
-import com.optimaize.langdetect.LanguageDetector;
-import com.optimaize.langdetect.LanguageDetectorBuilder;
-import com.optimaize.langdetect.i18n.LdLocale;
-import com.optimaize.langdetect.ngram.NgramExtractors;
-import com.optimaize.langdetect.profiles.LanguageProfile;
-import com.optimaize.langdetect.profiles.LanguageProfileReader;
-import com.optimaize.langdetect.text.CommonTextObjectFactories;
-import com.optimaize.langdetect.text.TextObject;
-import com.optimaize.langdetect.text.TextObjectFactory;*/
-
+import dbconnector.DbConnector;
 import java.io.IOException;
 
 import org.apache.tika.langdetect.OptimaizeLangDetector;
@@ -31,9 +21,11 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -84,8 +76,62 @@ public class YandexApiExe {
     public String doGetTranslatedWord(String wordForTranslate) throws Exception {
 
         String result = "";
+
+        result = doGetTranslatedWordFromDb(wordForTranslate);
+
+        if(result.equals("")) {
+            result = doYandexApiWork(wordForTranslate);
+        }
+
+
+        return result;
+    }
+
+    private String doGetTranslatedWordFromDb (String wordForTranslate) throws Exception {
+        String result = "";
+
+        String ru;
+        String en;
+        String detectedLang;
+        String resolvedLn;
+
+        ru = "RU";
+        en = "ENG";
+
+        resolvedLn = doDetectLanguage(wordForTranslate);
+
+        if(resolvedLn.equals("ru")) {
+            detectedLang = ru;
+        } else {
+            detectedLang = en;
+        }
+
+        DbConnector connector = DbConnector.getInstance();
+        connector.initializeConnection();
+
+        String sql = String.format("SELECT * FROM DICTIONARY WHERE %s = '%s';", detectedLang, wordForTranslate);
+
+        PreparedStatement pr = connector.getConnection().prepareStatement(sql);
+            ResultSet resultSet = pr.executeQuery();
+            while (resultSet.next()) {
+                String english = resultSet.getString("ENG");
+                String russian = resultSet.getString("RU");
+                //System.out.println(String.format("%s | %s", english, russian));
+                result = String.format("%s | %s", english, russian);
+            }
+
+        connector.closeConnection(connector.getConnection());
+
+        return result;
+    }
+
+    private String doYandexApiWork(String wordForTranslate) throws Exception{
+
+        String result;
         HttpResponse httpResponse = null;
         //HttpGet get = new HttpGet("https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20180101T103022Z.a3ec12ad40f2085c.ee440ea7adc10858247b5143e69e4185fdb9eb65&text=town&lang=en-ru");
+
+
         HttpGet get = new HttpGet(uriCreator(wordForTranslate));
         HttpClient httpClient = HttpClients.createDefault();
 
@@ -108,7 +154,6 @@ public class YandexApiExe {
         } else {
             LOG.info(String.format("Req = %s. Result in not null.", wordForTranslate));
         }
-
         return result;
     }
 

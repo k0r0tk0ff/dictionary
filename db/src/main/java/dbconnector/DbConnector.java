@@ -1,3 +1,5 @@
+package dbconnector;
+
 import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,7 +13,6 @@ public class DbConnector {
     private static Properties properties;
     private InputStream input = null;
 
-    //public void loadDbProperties() {
     private DbConnector() {
         properties = new Properties();
         input = this.getClass().getClassLoader().getResourceAsStream("dbConnect.properties");
