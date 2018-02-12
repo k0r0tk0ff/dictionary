@@ -54,6 +54,27 @@ public class DbTest {
 
     }
 
+    @Test
+    public void doInsertToDb() throws SQLException {
+
+        DbConnector connector = DbConnector.getInstance();
+        try {
+
+            connector.initializeConnection();
+            connector.createDb(connector.getConnection());
+
+            String sql = String.format("INSERT INTO DICTIONARY (en, ru) VALUES ('cat', 'кошка');");
+            Statement st = connector.getConnection().createStatement();
+            st.execute(sql);
+            st.close();
+
+            }  catch (SQLException e) {
+            e.printStackTrace();
+        }
+        connector.closeConnection(connector.getConnection());
+
+    }
+
         /*
     @Test
     public void testLogWrite() {

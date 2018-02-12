@@ -74,27 +74,46 @@ public class YandexApiExe {
     }
 
     public String doGetTranslatedWord(String wordForTranslate) throws Exception {
-
         String result = "";
+        String resolvedLn;
+        DbConnector connector = DbConnector.getInstance();
+        connector.initializeConnection();
 
-        result = doGetTranslatedWordFromDb(wordForTranslate);
+        resolvedLn = doDetectLanguage(wordForTranslate);
+
+        result = doGetTranslatedWordFromDb(wordForTranslate, resolvedLn, connector);
 
         if(result.equals("")) {
             result = doYandexApiWork(wordForTranslate);
+            doInsertToDbResult(wordForTranslate, resolvedLn, connector, result);
         }
-
+        connector.closeConnection(connector.getConnection());
 
         return result;
     }
 
-    private String doGetTranslatedWordFromDb (String wordForTranslate) throws Exception {
+    private void doInsertToDbResult(
+            String wordForTranslate,
+            String resolvedLn,
+            DbConnector connector,
+            String transWord) throws SQLException {
+        String reverse;
+
+        reverse = (resolvedLn.equals("ru")) ? "en" : "ru";
+
+        String sql = String.format("INSERT INTO DICTIONARY (%s, %s) VALUES (?, ?);",resolvedLn, reverse);
+        PreparedStatement pr = connector.getConnection().prepareStatement(sql);
+        pr.setString(1, wordForTranslate);
+        pr.setString(2, transWord);
+
+        pr.executeUpdate();
+        pr.close();
+
+    }
+
+    private String doGetTranslatedWordFromDb (String wordForTranslate, String resolvedLn, DbConnector connector)
+            throws Exception {
         String result = "";
-
-        String resolvedLn;
-        resolvedLn = doDetectLanguage(wordForTranslate);
-
-        DbConnector connector = DbConnector.getInstance();
-        connector.initializeConnection();
 
         String sql = String.format("SELECT * FROM DICTIONARY WHERE %s = '%s';", resolvedLn, wordForTranslate);
 
@@ -104,11 +123,12 @@ public class YandexApiExe {
                 String english = resultSet.getString("en");
                 String russian = resultSet.getString("ru");
 
-                result = String.format("%s | %s", english, russian);
+                result = String.format("%s = %s", english, russian);
             }
 
-        connector.closeConnection(connector.getConnection());
+        pr.close();
 
+        //System.out.println("result from DB = " + result);
         return result;
     }
 
@@ -117,13 +137,23 @@ public class YandexApiExe {
         String result;
         HttpResponse httpResponse = null;
         //HttpGet get = new HttpGet("https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20180101T103022Z.a3ec12ad40f2085c.ee440ea7adc10858247b5143e69e4185fdb9eb65&text=town&lang=en-ru");
-
-
         HttpGet get = new HttpGet(uriCreator(wordForTranslate));
         HttpClient httpClient = HttpClients.createDefault();
-
         httpResponse = httpClient.execute(get);
         HttpEntity entity = httpResponse.getEntity();
+
+        result = doJsonParse(entity);
+
+/*        if(result.equals("")) {
+            LOG.error(String.format("Req = %s.Result in null.", wordForTranslate));
+        } else {
+            LOG.info(String.format("Req = %s. Result in not null.", wordForTranslate));
+        }*/
+        return result;
+    }
+
+    private String doJsonParse(HttpEntity entity) throws Exception{
+        String parsedString;
 
         String json = EntityUtils.toString(entity, "UTF-8");
 
@@ -133,15 +163,8 @@ public class YandexApiExe {
         JSONObject obj = (JSONObject) resultObject;
         String raw = obj.get("text").toString();
 
-        //remove first 2 and last 2 symbols
-        result = raw.substring(2, raw.length() - 2);
-
-        if(result.equals("")) {
-            LOG.error(String.format("Req = %s.Result in null.", wordForTranslate));
-        } else {
-            LOG.info(String.format("Req = %s. Result in not null.", wordForTranslate));
-        }
-        return result;
+        parsedString = raw.substring(2, raw.length() - 2);
+        return parsedString;
     }
 
     private String uriCreator(String wordForTranslate) throws Exception{
