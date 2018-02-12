@@ -40,12 +40,12 @@ public class DbTest {
             PreparedStatement pr = connector.getConnection().prepareStatement(sql);
             ResultSet resultSet = pr.executeQuery();
             while (resultSet.next()) {
-                String eng = resultSet.getString("ENG");
-                String ru = resultSet.getString("RU");
+                String eng = resultSet.getString("en");
+                String ru = resultSet.getString("ru");
                 System.out.println(String.format("%s | %s", eng, ru));
+
             }
 
-            System.out.println(resultSet.toString());
 
             connector.closeConnection(connector.getConnection());
         } catch (SQLException e) {

@@ -55,14 +55,11 @@ public class DbConnector {
         Statement statement = null;
 
         statement = connection.createStatement();
-        String createDbTable = "CREATE TABLE IF NOT EXISTS DICTIONARY(ENG VARCHAR(50) PRIMARY KEY, RU VARCHAR(50)); ";
-        //String fillTable = "INSERT INTO DICTIONARY VALUES('cat', 'кошка')";
+        String createDbTable = "CREATE TABLE IF NOT EXISTS DICTIONARY(en VARCHAR(50) PRIMARY KEY, ru VARCHAR(50)); ";
 
         statement.execute(createDbTable);
-        //statement.execute(fillTable);
         statement.close();
     }
-
 
 
     public static DbConnector getInstance() {

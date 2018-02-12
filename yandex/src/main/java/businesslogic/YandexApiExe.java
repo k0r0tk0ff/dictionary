@@ -90,33 +90,20 @@ public class YandexApiExe {
     private String doGetTranslatedWordFromDb (String wordForTranslate) throws Exception {
         String result = "";
 
-        String ru;
-        String en;
-        String detectedLang;
         String resolvedLn;
-
-        ru = "RU";
-        en = "ENG";
-
         resolvedLn = doDetectLanguage(wordForTranslate);
-
-        if(resolvedLn.equals("ru")) {
-            detectedLang = ru;
-        } else {
-            detectedLang = en;
-        }
 
         DbConnector connector = DbConnector.getInstance();
         connector.initializeConnection();
 
-        String sql = String.format("SELECT * FROM DICTIONARY WHERE %s = '%s';", detectedLang, wordForTranslate);
+        String sql = String.format("SELECT * FROM DICTIONARY WHERE %s = '%s';", resolvedLn, wordForTranslate);
 
         PreparedStatement pr = connector.getConnection().prepareStatement(sql);
             ResultSet resultSet = pr.executeQuery();
             while (resultSet.next()) {
-                String english = resultSet.getString("ENG");
-                String russian = resultSet.getString("RU");
-                //System.out.println(String.format("%s | %s", english, russian));
+                String english = resultSet.getString("en");
+                String russian = resultSet.getString("ru");
+
                 result = String.format("%s | %s", english, russian);
             }
 
