@@ -1,3 +1,4 @@
+
 package servlets;
 
 import businesslogic.YandexApiExe;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
         urlPatterns = {"/MainServlet"}
 )
 
+//TODO: название сервлета не точно описывает суть производимых действий
 public class MainServlet extends HttpServlet {
 
     private final static Logger LOG = LoggerFactory.getLogger(MainServlet.class);
@@ -34,7 +36,9 @@ public class MainServlet extends HttpServlet {
                 yaApi = YandexApiExe.getInstance();
                 result = yaApi.doGetTranslatedWord(request.getParameter("wordForTranslate"));
             } catch (Exception e) {
+                //TODO: важно логировать весь stacktrace, так как сообщения мжет вообще не быть или оно не информативно
             LOG.error(e.getMessage());
+                //TODO: немного неверное использование лога,  debug здесь не нужен, так как логируется ошибка
             LOG.debug(" Catch exception in try block");
             }
 
