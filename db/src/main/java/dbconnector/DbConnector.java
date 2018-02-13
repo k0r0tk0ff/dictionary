@@ -1,3 +1,4 @@
+
 package dbconnector;
 
 import java.io.*;
@@ -9,15 +10,19 @@ import java.util.Properties;
 
 public class DbConnector {
 
+    //TODO: лучше использовать ленивую инициализацию
     private static final DbConnector INSTANCE = new DbConnector();
     private static Properties properties;
     private InputStream input = null;
 
     private DbConnector() {
         properties = new Properties();
+        //TODO: ресурсы можно получить по другому 
         input = this.getClass().getClassLoader().getResourceAsStream("dbConnect.properties");
         try {
             properties.load(input);
+            
+            //TODO: если у тебя будет ошибка, приложение запустится, но работа с БД не будет работать
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
