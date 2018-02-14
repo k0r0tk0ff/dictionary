@@ -9,14 +9,21 @@ import java.util.Properties;
 
 public class DbConnector {
 
-    private static final DbConnector INSTANCE = new DbConnector();
+    private static volatile DbConnector INSTANCE;
+
     private static Properties properties;
     private InputStream input = null;
 
-    private DbConnector() {
+    private DbConnector() throws Exception{
         properties = new Properties();
-        input = this.getClass().getClassLoader().getResourceAsStream("dbConnect.properties");
-        try {
+
+        FileInputStream in = new FileInputStream("dbConnect.properties");
+        properties.load(in);
+
+        //Alternative load properties from file "dbConnect.properties",
+        // but it must be in folder "properties" in classpath
+/*        try {
+            input = this.getClass().getClassLoader().getResourceAsStream("dbConnect.properties");
             properties.load(input);
         } catch (IOException e) {
             e.printStackTrace();
@@ -28,7 +35,22 @@ public class DbConnector {
                     e.printStackTrace();
                 }
             }
+        }*/
+    }
+
+    //Use double check and volatile, see
+    //https://habrahabr.ru/post/129494/
+    public static DbConnector getInstance() throws Exception{
+        DbConnector localInstance = INSTANCE;
+        if (localInstance == null) {
+            synchronized (DbConnector.class) {
+                localInstance = INSTANCE;
+                if (localInstance == null) {
+                    INSTANCE = localInstance = new DbConnector();
+                }
+            }
         }
+        return localInstance;
     }
 
     public Connection connection = null;
@@ -39,12 +61,6 @@ public class DbConnector {
                 properties.getProperty("jdbc.user"),
                 properties.getProperty("jdbc.password")
                 );
-
-/*        connection = DriverManager.getConnection(
-                "jdbc:h2:~/test",
-                "sa",
-                ""
-                );*/
     }
 
     public void closeConnection (Connection connection) throws SQLException {
@@ -62,9 +78,9 @@ public class DbConnector {
     }
 
 
-    public static DbConnector getInstance() {
+/*    public static DbConnector getInstance() {
         return INSTANCE;
-    }
+    }*/
 
     public String getPropertyValue(String key) {
         return properties.getProperty(key);
@@ -73,5 +89,6 @@ public class DbConnector {
     public Connection getConnection (){
         return this.connection;
     }
+
 }
 

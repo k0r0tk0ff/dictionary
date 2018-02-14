@@ -23,17 +23,22 @@ public class DbTest {
 
     @Test
     public void loadPropertiesFromFile() throws Exception {
+        try {
         DbConnector connector = DbConnector.getInstance();
         assertThat(connector.getPropertyValue("jdbc.user"), is("sa"));
         System.out.println("Read properties from file success.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void showDataFromDb() {
         String sql = "SELECT * FROM DICTIONARY;";
-        DbConnector connector = DbConnector.getInstance();
+
 
         try {
+            DbConnector connector = DbConnector.getInstance();
             connector.initializeConnection();
             connector.createDb(connector.getConnection());
 
@@ -48,7 +53,7 @@ public class DbTest {
 
 
             connector.closeConnection(connector.getConnection());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -57,8 +62,9 @@ public class DbTest {
     @Test
     public void doInsertToDb() throws SQLException {
 
-        DbConnector connector = DbConnector.getInstance();
+
         try {
+            DbConnector connector = DbConnector.getInstance();
 
             connector.initializeConnection();
             connector.createDb(connector.getConnection());
@@ -67,11 +73,12 @@ public class DbTest {
             Statement st = connector.getConnection().createStatement();
             st.execute(sql);
             st.close();
+            connector.closeConnection(connector.getConnection());
 
-            }  catch (SQLException e) {
+            }  catch (Exception e) {
             e.printStackTrace();
         }
-        connector.closeConnection(connector.getConnection());
+
 
     }
 
