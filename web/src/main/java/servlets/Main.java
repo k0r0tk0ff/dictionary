@@ -1,3 +1,4 @@
+
 package servlets;
 
 //import businesslogic.YandexApiExe;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Optional;
 import org.apache.catalina.startup.Tomcat;
 
+//TODO: не совсем понятно, почему запускающий класс находится в модуле web
 public class Main {
 
     private static final Logger LOG  = LoggerFactory.getLogger(Main.class);
