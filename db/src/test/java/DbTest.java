@@ -36,7 +36,6 @@ public class DbTest {
     public void showDataFromDb() {
         String sql = "SELECT * FROM DICTIONARY;";
 
-
         try {
             DbConnector connector = DbConnector.getInstance();
             connector.initializeConnection();
@@ -48,10 +47,9 @@ public class DbTest {
                 String eng = resultSet.getString("en");
                 String ru = resultSet.getString("ru");
                 System.out.println(String.format("%s | %s", eng, ru));
-
             }
 
-
+            pr.close();
             connector.closeConnection(connector.getConnection());
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,8 +59,6 @@ public class DbTest {
 
     @Test
     public void doInsertToDb() throws SQLException {
-
-
         try {
             DbConnector connector = DbConnector.getInstance();
 
@@ -78,8 +74,6 @@ public class DbTest {
             }  catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
         /*

@@ -30,7 +30,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-public class YandexApiExe {
+public class YandexApiExe implements Translator{
 
     private static volatile YandexApiExe instance;
     private static Properties properties;
@@ -84,7 +84,7 @@ public class YandexApiExe {
         result = doGetTranslatedWordFromDb(wordForTranslate, resolvedLn, connector);
 
         if(result.equals("")) {
-            result = doYandexApiWork(wordForTranslate);
+            result = doTranslate(wordForTranslate);
             doInsertToDbResult(wordForTranslate, resolvedLn, connector, result);
         }
         connector.closeConnection(connector.getConnection());
@@ -132,7 +132,7 @@ public class YandexApiExe {
         return result;
     }
 
-    private String doYandexApiWork(String wordForTranslate) throws Exception{
+    public String doTranslate(String wordForTranslate) throws Exception{
 
         String result;
         HttpResponse httpResponse = null;

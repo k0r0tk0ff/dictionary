@@ -1,5 +1,6 @@
 package servlets;
 
+import businesslogic.Translator;
 import businesslogic.YandexApiExe;
 
 import org.slf4j.Logger;
@@ -25,14 +26,14 @@ public class ServletForTranslate extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        YandexApiExe yaApi;
+        Translator translatorApi;
         String result = null;
         request.setCharacterEncoding("UTF-8");
 
         try {
             LOG.info("Sending an INFO message from try block");
-                yaApi = YandexApiExe.getInstance();
-                result = yaApi.doGetTranslatedWord(request.getParameter("wordForTranslate"));
+            translatorApi = YandexApiExe.getInstance();
+                result = translatorApi.doGetTranslatedWord(request.getParameter("wordForTranslate"));
             } catch (Exception e) {
             LOG.error(e.toString());
             }
