@@ -1,10 +1,7 @@
 package dbconnector;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Properties;
 
 public class DbConnector {
@@ -73,6 +70,43 @@ public class DbConnector {
 
         statement.execute(createDbTable);
         statement.close();
+    }
+
+    public String doGetTranslatedWordFromDb (String wordForTranslate, String resolvedLn)
+            throws Exception {
+        String result = "";
+
+        String sql = String.format("SELECT * FROM DICTIONARY WHERE %s = '%s';", resolvedLn, wordForTranslate);
+
+        PreparedStatement pr = getConnection().prepareStatement(sql);
+        ResultSet resultSet = pr.executeQuery();
+        while (resultSet.next()) {
+            String english = resultSet.getString("en");
+            String russian = resultSet.getString("ru");
+
+            result = String.format("%s = %s", english, russian);
+        }
+
+        pr.close();
+
+        return result;
+    }
+
+    public void doInsertToDbResult(
+            String wordForTranslate,
+            String resolvedLn,
+            String transWord) throws SQLException {
+        String reverse;
+
+        reverse = (resolvedLn.equals("ru")) ? "en" : "ru";
+
+        String sql = String.format("INSERT INTO DICTIONARY (%s, %s) VALUES (?, ?);",resolvedLn, reverse);
+        PreparedStatement pr = getConnection().prepareStatement(sql);
+        pr.setString(1, wordForTranslate);
+        pr.setString(2, transWord);
+
+        pr.executeUpdate();
+        pr.close();
     }
 
     public String getPropertyValue(String key) {

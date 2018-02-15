@@ -23,9 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -81,54 +78,14 @@ public class YandexApiExe implements Translator{
 
         resolvedLn = doDetectLanguage(wordForTranslate);
 
-        result = doGetTranslatedWordFromDb(wordForTranslate, resolvedLn, connector);
+        result = connector.doGetTranslatedWordFromDb(wordForTranslate, resolvedLn);
 
         if(result.equals("")) {
             result = doTranslate(wordForTranslate);
-            doInsertToDbResult(wordForTranslate, resolvedLn, connector, result);
+            connector.doInsertToDbResult(wordForTranslate, resolvedLn, result);
         }
         connector.closeConnection(connector.getConnection());
 
-        return result;
-    }
-
-    private void doInsertToDbResult(
-            String wordForTranslate,
-            String resolvedLn,
-            DbConnector connector,
-            String transWord) throws SQLException {
-        String reverse;
-
-        reverse = (resolvedLn.equals("ru")) ? "en" : "ru";
-
-        String sql = String.format("INSERT INTO DICTIONARY (%s, %s) VALUES (?, ?);",resolvedLn, reverse);
-        PreparedStatement pr = connector.getConnection().prepareStatement(sql);
-        pr.setString(1, wordForTranslate);
-        pr.setString(2, transWord);
-
-        pr.executeUpdate();
-        pr.close();
-
-    }
-
-    private String doGetTranslatedWordFromDb (String wordForTranslate, String resolvedLn, DbConnector connector)
-            throws Exception {
-        String result = "";
-
-        String sql = String.format("SELECT * FROM DICTIONARY WHERE %s = '%s';", resolvedLn, wordForTranslate);
-
-        PreparedStatement pr = connector.getConnection().prepareStatement(sql);
-            ResultSet resultSet = pr.executeQuery();
-            while (resultSet.next()) {
-                String english = resultSet.getString("en");
-                String russian = resultSet.getString("ru");
-
-                result = String.format("%s = %s", english, russian);
-            }
-
-        pr.close();
-
-        //System.out.println("result from DB = " + result);
         return result;
     }
 
