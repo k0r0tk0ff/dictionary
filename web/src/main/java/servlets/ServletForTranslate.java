@@ -14,13 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(
-        name = "MainServlet",
-        urlPatterns = {"/MainServlet"}
+        name = "ServletForTranslate",
+        urlPatterns = {"/ServletForTranslate"}
 )
 
-public class MainServlet extends HttpServlet {
+public class ServletForTranslate extends HttpServlet {
 
-    private final static Logger LOG = LoggerFactory.getLogger(MainServlet.class);
+    private final static Logger LOG = LoggerFactory.getLogger(ServletForTranslate.class);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -34,8 +34,7 @@ public class MainServlet extends HttpServlet {
                 yaApi = YandexApiExe.getInstance();
                 result = yaApi.doGetTranslatedWord(request.getParameter("wordForTranslate"));
             } catch (Exception e) {
-            LOG.error(e.getMessage());
-            LOG.debug(" Catch exception in try block");
+            LOG.error(e.toString());
             }
 
         response.setCharacterEncoding("UTF-8");

@@ -9,12 +9,12 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
     <display-name>Dictionary</display-name>
 
     <servlet>
-        <servlet-name>MainServlet</servlet-name>
-        <servlet-class>servlets.MainServlet</servlet-class>
+        <servlet-name>ServletForTranslate</servlet-name>
+        <servlet-class>servlets.ServletForTranslate</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>MainServlet</servlet-name>
-        <url-pattern>/MainServlet</url-pattern>
+        <servlet-name>ServletForTranslate</servlet-name>
+        <url-pattern>/ServletForTranslate</url-pattern>
     </servlet-mapping>
 
     <filter>
@@ -27,7 +27,7 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
     </filter>
     <filter-mapping>
         <filter-name>FormEncodingSetterFilter</filter-name>
-        <!--<url-pattern>/MainServlet/*</url-pattern>-->
+        <!--<url-pattern>/ServletForTranslate/*</url-pattern>-->
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 </web-app>

@@ -17,8 +17,14 @@ public class DbConnector {
     private DbConnector() throws Exception{
         properties = new Properties();
 
-        FileInputStream in = new FileInputStream("dbConnect.properties");
+        FileInputStream in = new FileInputStream("/dbConnect.properties");
+        //InputStream in = getClass().getResourceAsStream("dbConnect.properties");
+
         properties.load(in);
+
+/*        FileOutputStream out = new FileOutputStream("dbConnect2.properties");
+        properties.setProperty("asdf", "1");
+        properties.store(out,"comment");*/
 
         //Alternative load properties from file "dbConnect.properties",
         // but it must be in folder "properties" in classpath
@@ -76,11 +82,6 @@ public class DbConnector {
         statement.execute(createDbTable);
         statement.close();
     }
-
-
-/*    public static DbConnector getInstance() {
-        return INSTANCE;
-    }*/
 
     public String getPropertyValue(String key) {
         return properties.getProperty(key);

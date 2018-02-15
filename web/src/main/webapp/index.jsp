@@ -13,7 +13,7 @@
 
 <div class="container">
     <h1>Dictionary</h1>
-    <form id="translateform" action="MainServlet" method="post" class="form-horizontal" role="form">
+    <form id="translateform" action="ServletForTranslate" method="post" class="form-horizontal" role="form">
         <div style="margin-bottom: 25px" class="input-group">
             <span class="input-group-addon"><i class="glyphicon glyphicon-pencil"></i></span>
             <input id="wordForTranslate"
