@@ -28,7 +28,7 @@ import java.util.Properties;
 import java.util.Set;
 
 public class YandexApiExe implements Translator{
-
+ 
     private static volatile YandexApiExe instance;
     private static Properties properties;
     private InputStream input = null;
@@ -36,9 +36,14 @@ public class YandexApiExe implements Translator{
 
     private final static Logger LOG = LoggerFactory.getLogger(YandexApiExe.class);
 
-    private YandexApiExe() {
+        private YandexApiExe() throws Exception {
 
         properties = new Properties();
+        input = getClass().getResourceAsStream("/dbConnect.properties" );
+        properties.load(input);
+        input.close();
+
+       /* properties = new Properties();
 
         input = this.getClass().getClassLoader().getResourceAsStream("yandexapi.properties");
         try {
@@ -53,7 +58,7 @@ public class YandexApiExe implements Translator{
                     e.printStackTrace();
                 }
             }
-        }
+        } */
         yandexApiKey = properties.getProperty("yandexKey");
     }
 
