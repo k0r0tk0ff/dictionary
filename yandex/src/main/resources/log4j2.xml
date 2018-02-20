@@ -6,8 +6,8 @@
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
             </PatternLayout>
         </Console>
-        <RollingFile name="RollingFile" fileName="e:\logs\web.log"
-                     filePattern="$${date:yyyy-MM}/web-%d{MM-dd-yyyy}-%i.log.gz">
+        <RollingFile name="RollingFile" fileName="dictionary.log"
+                     filePattern="$${date:yyyy-MM}/dictionary-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout>
                 <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n</Pattern>
             </PatternLayout>
@@ -19,7 +19,7 @@
         </RollingFile>
     </Appenders>
     <Loggers>
-        <Logger name="MainServlet" level="error" additivity="false">
+        <Logger name="dictionary" level="error" additivity="false">
             <AppenderRef ref="RollingFile" />
             <AppenderRef ref="Console" />
         </Logger>

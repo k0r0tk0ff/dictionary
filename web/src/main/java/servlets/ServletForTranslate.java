@@ -31,15 +31,21 @@ public class ServletForTranslate extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         try {
-            LOG.info("Sending an INFO message from try block");
             translatorApi = YandexApiExe.getInstance();
                 result = translatorApi.doGetTranslatedWord(request.getParameter("wordForTranslate"));
             } catch (Exception e) {
-            LOG.error(e.toString());
+            LOG.error(e.getMessage(), e);
             }
 
         response.setCharacterEncoding("UTF-8");
+
+        if (result != null) {
         request.setAttribute("result", result);
+        } else {
+            request.setAttribute("result", "Error! See log!");
+            System.exit(1);
+        }
+
         request.getRequestDispatcher("index.jsp").include(request, response);
     }
 }

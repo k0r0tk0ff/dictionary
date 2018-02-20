@@ -1,6 +1,8 @@
 package businesslogic;
 
 import dbconnector.DbConnector;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.tika.langdetect.OptimaizeLangDetector;
@@ -38,31 +40,21 @@ public class YandexApiExe implements Translator{
 
         private YandexApiExe() throws Exception {
 
-        properties = new Properties();
-        input = getClass().getResourceAsStream("/dbConnect.properties" );
-        properties.load(input);
-        input.close();
-
-       /* properties = new Properties();
-
-        input = this.getClass().getClassLoader().getResourceAsStream("yandexapi.properties");
-        try {
+            String pathToProperties = "/yandexapi.properties";
+            try {
+            properties = new Properties();
+            input = getClass().getResourceAsStream(pathToProperties);
             properties.load(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            input.close();
+
+            } catch (NullPointerException e) {
+                LOG.error(String.format("Can not find property file \"%s\"", pathToProperties));
             }
-        } */
-        yandexApiKey = properties.getProperty("yandexKey");
+
+            yandexApiKey = properties.getProperty("yandexKey");
     }
 
-    public static YandexApiExe getInstance() {
+    public static YandexApiExe getInstance() throws Exception{
         YandexApiExe localInstance = instance;
         if (localInstance == null) {
             synchronized (YandexApiExe.class) {

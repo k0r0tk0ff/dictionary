@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class DbTest {
 
-    @Test
+   /* @Test
     public void loadDriverTestH2() throws Exception {
 
         try {
@@ -76,7 +76,7 @@ public class DbTest {
         }
     }
 
-        /*
+        *//*
     @Test
     public void testLogWrite() {
 
@@ -111,7 +111,10 @@ public class DbTest {
             log.error("Something failed", e);
         }
         log.debug("done");
-    }*/
+    }
+
+    */
+
 }
 
 
