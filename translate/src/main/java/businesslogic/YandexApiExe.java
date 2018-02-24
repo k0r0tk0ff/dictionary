@@ -49,6 +49,8 @@ public class YandexApiExe implements Translator{
 
             } catch (NullPointerException e) {
                 LOG.error(String.format("Can not find property file \"%s\"", pathToProperties));
+                LOG.error(String.format("Check exist file \"yandexapi.properties\" in classpath ", pathToProperties));
+                Exception forIntercept = new NullPointerException();
             }
 
             yandexApiKey = properties.getProperty("yandexKey");
