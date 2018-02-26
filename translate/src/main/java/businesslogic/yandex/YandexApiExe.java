@@ -1,8 +1,10 @@
-package businesslogic;
+package businesslogic.yandex;
 
+import businesslogic.Translator;
 import dbconnector.DbConnector;
 
-import java.io.FileNotFoundException;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 
 import org.apache.tika.langdetect.OptimaizeLangDetector;
@@ -25,31 +27,37 @@ import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-public class YandexApiExe implements Translator{
+public class YandexApiExe implements Translator {
  
     private static volatile YandexApiExe instance;
     private static Properties properties;
-    private InputStream input = null;
     private String yandexApiKey;
+    private String pathToProperties = "yandexapi.properties";
 
     private final static Logger LOG = LoggerFactory.getLogger(YandexApiExe.class);
 
         private YandexApiExe() throws Exception {
 
-            String pathToProperties = "/yandexapi.properties";
             try {
-            properties = new Properties();
-            input = getClass().getResourceAsStream(pathToProperties);
-            properties.load(input);
-            input.close();
+                properties = new Properties();
+
+                Path path = Paths.get(pathToProperties);
+                BufferedReader input = Files.newBufferedReader(path, Charset.forName("UTF-8"));
+
+                properties.load(input);
+                input.close();
 
             } catch (NullPointerException e) {
                 LOG.error(String.format("Can not find property file \"%s\"", pathToProperties));
-                LOG.error(String.format("Check exist file \"yandexapi.properties\" in classpath ", pathToProperties));
+                LOG.error(String.format("Check exist file \"yandexapi.properties\" in directory with executable jar file.", pathToProperties));
                 Exception forIntercept = new NullPointerException();
             }
 

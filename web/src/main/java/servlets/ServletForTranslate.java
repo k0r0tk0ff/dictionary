@@ -1,7 +1,7 @@
 package servlets;
 
 import businesslogic.Translator;
-import businesslogic.YandexApiExe;
+import businesslogic.yandex.YandexApiExe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
