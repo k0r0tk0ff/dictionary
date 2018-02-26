@@ -39,29 +39,36 @@ public class YandexApiExe implements Translator {
  
     private static volatile YandexApiExe instance;
     private static Properties properties;
-    private String yandexApiKey;
+    private String yandexApiKey = "empty";
     private String pathToProperties = "yandexapi.properties";
 
     private final static Logger LOG = LoggerFactory.getLogger(YandexApiExe.class);
 
         private YandexApiExe() throws Exception {
+        propertyLoader();
+    }
 
-            try {
-                properties = new Properties();
+    private void propertyLoader() throws Exception{
+        try {
+            properties = new Properties();
 
-                Path path = Paths.get(pathToProperties);
-                BufferedReader input = Files.newBufferedReader(path, Charset.forName("UTF-8"));
+            Path path = Paths.get(pathToProperties);
+            BufferedReader input = Files.newBufferedReader(path, Charset.forName("UTF-8"));
 
-                properties.load(input);
-                input.close();
+            properties.load(input);
+            input.close();
+            yandexApiKey = properties.getProperty("yandexKey");
 
-            } catch (NullPointerException e) {
-                LOG.error(String.format("Can not find property file \"%s\"", pathToProperties));
-                LOG.error(String.format("Check exist file \"yandexapi.properties\" in directory with executable jar file.", pathToProperties));
-                Exception forIntercept = new NullPointerException();
+            if(yandexApiKey.equals("empty") || yandexApiKey.equals("") || yandexApiKey.equals(null)) {
+                 Exception forIntercept = new NullPointerException();
             }
 
-            yandexApiKey = properties.getProperty("yandexKey");
+        } catch (NullPointerException e) {
+            LOG.error("Check exist file \"yandexapi.properties\" with correct key in directory with executable jar file.");
+            Exception forIntercept = new NullPointerException();
+        }
+
+
     }
 
     public static YandexApiExe getInstance() throws Exception{
@@ -100,7 +107,7 @@ public class YandexApiExe implements Translator {
 
         String result;
         HttpResponse httpResponse = null;
-        //HttpGet get = new HttpGet("https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20180101T103022Z.a3ec12ad40f2085c.ee440ea7adc10858247b5143e69e4185fdb9eb65&text=town&lang=en-ru");
+        //HttpGet get = new HttpGet("https://translate.yandex.net/api/v1.5/tr.json/translate?key=!!KEY!!&text=town&lang=en-ru");
         HttpGet get = new HttpGet(uriCreator(wordForTranslate));
         HttpClient httpClient = HttpClients.createDefault();
         httpResponse = httpClient.execute(get);
