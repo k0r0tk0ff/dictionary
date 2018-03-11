@@ -21,7 +21,7 @@
     <Loggers>
         <Logger name="dictionary" level="error" additivity="false">
             <AppenderRef ref="RollingFile" />
-            <AppenderRef ref="Console" />
+           <!-- <AppenderRef ref="Console" />-->
         </Logger>
         <Root level="error">
             <AppenderRef ref="Console" level="debug"/>

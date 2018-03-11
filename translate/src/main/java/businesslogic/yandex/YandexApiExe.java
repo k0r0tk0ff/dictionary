@@ -3,7 +3,6 @@ package businesslogic.yandex;
 import businesslogic.Translator;
 import dbconnector.DbConnector;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 
@@ -25,10 +24,9 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
-
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -49,7 +47,6 @@ public class YandexApiExe implements Translator {
     }
 
     private void propertyLoader() throws Exception{
-        try {
             properties = new Properties();
 
             Path path = Paths.get(pathToProperties);
@@ -58,17 +55,6 @@ public class YandexApiExe implements Translator {
             properties.load(input);
             input.close();
             yandexApiKey = properties.getProperty("yandexKey");
-
-            if(yandexApiKey.equals("empty") || yandexApiKey.equals("") || yandexApiKey.equals(null)) {
-                 Exception forIntercept = new NullPointerException();
-            }
-
-        } catch (NullPointerException e) {
-            LOG.error("Check exist file \"yandexapi.properties\" with correct key in directory with executable jar file.");
-            Exception forIntercept = new NullPointerException();
-        }
-
-
     }
 
     public static YandexApiExe getInstance() throws Exception{

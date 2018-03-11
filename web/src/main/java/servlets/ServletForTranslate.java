@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -32,10 +33,13 @@ public class ServletForTranslate extends HttpServlet {
 
         try {
             translatorApi = YandexApiExe.getInstance();
-                result = translatorApi.doGetTranslatedWord(request.getParameter("wordForTranslate"));
-            } catch (Exception e) {
+            result = translatorApi.doGetTranslatedWord(request.getParameter("wordForTranslate"));
+        } catch (NoSuchFileException e) {
+            LOG.error("Check exist file \"yandexapi.properties\" with correct key in directory with executable jar file.");
             LOG.error(e.getMessage(), e);
-            }
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
 
         response.setCharacterEncoding("UTF-8");
 
