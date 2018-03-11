@@ -11,8 +11,6 @@
 
     <artifactId>exe</artifactId>
 
-
-
     <build>
         <finalName>dictionary</finalName>
         <resources>
