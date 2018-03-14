@@ -21,6 +21,7 @@ import org.apache.http.util.EntityUtils;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -101,15 +103,15 @@ public class YandexApiExe implements Translator {
 
         result = doJsonParse(entity);
 
-/*        if(result.equals("")) {
+        if(result.equals("")) {
             LOG.error(String.format("Req = %s.Result in null.", wordForTranslate));
         } else {
             LOG.info(String.format("Req = %s. Result in not null.", wordForTranslate));
-        }*/
+        }
         return result;
     }
 
-    private String doJsonParse(HttpEntity entity) throws Exception{
+    private String doJsonParse(HttpEntity entity) throws ParseException, IOException {
         String parsedString;
 
         String json = EntityUtils.toString(entity, "UTF-8");
@@ -121,6 +123,7 @@ public class YandexApiExe implements Translator {
         String raw = obj.get("text").toString();
 
         parsedString = raw.substring(2, raw.length() - 2);
+
         return parsedString;
     }
 

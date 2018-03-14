@@ -45,6 +45,7 @@ public class DbConnector {
                 }
             }
         }
+
         return localInstance;
     }
 
@@ -56,6 +57,7 @@ public class DbConnector {
                 properties.getProperty("jdbc.user"),
                 properties.getProperty("jdbc.password")
                 );
+        createDb(connection);
     }
 
     public void closeConnection (Connection connection) throws SQLException {
@@ -100,7 +102,9 @@ public class DbConnector {
 
         reverse = (resolvedLn.equals("ru")) ? "en" : "ru";
 
-        String sql = String.format("INSERT INTO DICTIONARY (%s, %s) VALUES (?, ?);",resolvedLn, reverse);
+        //String sql = String.format("INSERT INTO DICTIONARY (%s, %s) VALUES (?, ?);",resolvedLn, reverse);
+        String sql = String.format(
+                "BEGIN IF NOT EXISTS (SELECT * FROM DICTIONARY WHERE %s = '%s') BEGIN INSERT INTO DICTIONARY (%s, %s) VALUES (?, ?) END END ",resolvedLn, wordForTranslate,resolvedLn, reverse);
         PreparedStatement pr = getConnection().prepareStatement(sql);
         pr.setString(1, wordForTranslate);
         pr.setString(2, transWord);
