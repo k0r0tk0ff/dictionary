@@ -5,10 +5,13 @@ import java.util.Scanner;
 public class EnterFromKeyboard {
 
     public void describeLogic() {
-        System.out.println("\n\n Translator API");
-        System.out.println("Enter value for run - ");
-        System.out.println("0 - Exit");
-        System.out.println("1 - Yandex Api. Need file \"yandexapi.properties\" with key in directory, contain executable jar file");
+        System.out.println("\n\n  Translator API \n\n");
+        System.out.println("  Enter value for run - ");
+        System.out.println("  0 - Exit");
+        System.out.println("  1 - [web] Yandex Api.");
+        System.out.println("  2 - [API] Yandex Api.");
+        System.out.println("\n\n  WARNING!  For use  Yandex Api need put file \"yandexapi.properties\" ");
+        System.out.println("  with key in directory, contains executable jar file \n");
     }
 
     String enterFromkeyboard () {
