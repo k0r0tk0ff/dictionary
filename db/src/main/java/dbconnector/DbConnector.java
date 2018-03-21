@@ -94,23 +94,42 @@ public class DbConnector {
         return result;
     }
 
-    public void doInsertToDbResult(
-            String wordForTranslate,
-            String resolvedLn,
-            String transWord) throws SQLException {
+    public void doInsertToDbResult( String wordForTranslate, String resolvedLn, String transWord) throws SQLException {
         String reverse;
 
         reverse = (resolvedLn.equals("ru")) ? "en" : "ru";
 
-        //String sql = String.format("INSERT INTO DICTIONARY (%s, %s) VALUES (?, ?);",resolvedLn, reverse);
-        String sql = String.format(
-                "BEGIN IF NOT EXISTS (SELECT * FROM DICTIONARY WHERE %s = '%s') BEGIN INSERT INTO DICTIONARY (%s, %s) VALUES (?, ?) END END ",resolvedLn, wordForTranslate,resolvedLn, reverse);
-        PreparedStatement pr = getConnection().prepareStatement(sql);
-        pr.setString(1, wordForTranslate);
-        pr.setString(2, transWord);
+        String sqlFlag = "";
+        //--------------------------------------
+        switch (resolvedLn) {
+            case "ru": sqlFlag = "SELECT * FROM DICTIONARY WHERE ru = ?"; break;
+            case "en": sqlFlag = "SELECT * FROM DICTIONARY WHERE en = ?"; break;
+        }
 
-        pr.executeUpdate();
-        pr.close();
+        //--------------------------------------
+
+        //String sqlFlag = String.format("SELECT * FROM DICTIONARY WHERE %s = '%s'", resolvedLn, wordForTranslate);
+        PreparedStatement pr1 = getConnection().prepareStatement(sqlFlag);
+        pr1.setString(1, wordForTranslate);
+        ResultSet resultSet = pr1.executeQuery();
+
+        if(!resultSet.next()) {
+        String sql = String.format("INSERT INTO DICTIONARY (%s, %s) VALUES (?, ?);",resolvedLn, reverse);
+
+        //do not work! sql error!
+        //String sql = String.format(
+        //        "BEGIN IF NOT EXISTS (SELECT * FROM DICTIONARY WHERE %s = '%s') BEGIN INSERT INTO DICTIONARY (%s, %s) VALUES (?, ?) END END ",resolvedLn, wordForTranslate,resolvedLn, reverse);
+        PreparedStatement pr2 = getConnection().prepareStatement(sql);
+        pr2.setString(1, wordForTranslate);
+        pr2.setString(2, transWord);
+
+        //pr.executeUpdate();
+        pr2.execute();
+        pr2.close();
+        }
+
+        resultSet.close();
+        pr1.close();
     }
 
     public String getPropertyValue(String key) {

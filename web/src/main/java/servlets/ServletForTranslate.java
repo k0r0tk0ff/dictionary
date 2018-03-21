@@ -28,14 +28,22 @@ public class ServletForTranslate extends HttpServlet {
             throws ServletException, IOException {
 
         Translator translatorApi;
-        String result = null;
+        String result = "";
+
         request.setCharacterEncoding("UTF-8");
 
         try {
             translatorApi = YandexApiExe.getInstance();
-            result = translatorApi.doGetTranslatedWord(request.getParameter("wordForTranslate"));
+
+            if (request.getParameter("UseProxy") != null) {
+                result = translatorApi.doGetTranslatedWord
+                        (request.getParameter("wordForTranslate"), true);
+            } else {
+                result = translatorApi.doGetTranslatedWord
+                        (request.getParameter("wordForTranslate"), false);
+            }
         } catch (NoSuchFileException e) {
-            LOG.error("Check exist file \"yandexapi.properties\" with correct key in directory with executable jar file.");
+            LOG.error("Check exist file \"yandexapi.properties\" or \"proxy.properties\" with correct key in directory with executable jar file.");
             LOG.error(e.getMessage(), e);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
@@ -43,8 +51,8 @@ public class ServletForTranslate extends HttpServlet {
 
         response.setCharacterEncoding("UTF-8");
 
-        if (result != null) {
-        request.setAttribute("result", result);
+        if (!result.equals("")) {
+            request.setAttribute("result", result);
         } else {
             request.setAttribute("result", "Error! See log!");
             System.exit(1);

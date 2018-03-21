@@ -22,19 +22,35 @@
                    name="wordForTranslate"
                    placeholder="wordForTranslate">
         </div>
+        <div class="checkbox">
+                   <label><input type="checkbox" name="UseProxy" value="true" checked="checked">
+                        UseProxy
+                   </label>
+        </div>
         <div style="margin-top:10px" class="form-group">
             <div class="col-sm-12 controls">
                 <input type="submit" class="btn btn-default pull-right" value="Translate">
             </div>
         </div>
 
+
+
         <div class="panel panel-info">
             <div class="panel-heading">Translated word</div>
             <div class="panel-body"><c:out value="${result}"/></div>
         </div>
         <h5>Use Yandex API</h5>
-    </form>
-</div>
 
+    </form>
+<!--
+</div>
+<div class="container">
+     <form>
+         <div class="checkbox">
+             <label><input type="checkbox" value="1">UseProxy</label>
+         </div>
+     </form>
+</div>
+-->
 </body>
 </html>

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 public class WebTest {
     private static final Logger LOG = LoggerFactory.getLogger(WebTest.class);
 
-    @Test
+/*    @Test
     public void testLogWrite() {
 
         try {
@@ -23,5 +23,5 @@ public class WebTest {
             e.printStackTrace();
         }
 
-    }
+    }*/
 }

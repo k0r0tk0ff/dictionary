@@ -6,6 +6,18 @@ import dbconnector.DbConnector;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.ssl.SSLContexts;
+import org.apache.http.ssl.TrustStrategy;
 import org.apache.tika.langdetect.OptimaizeLangDetector;
 import org.apache.tika.language.detect.LanguageDetector;
 import org.apache.tika.language.detect.LanguageResult;
@@ -25,13 +37,17 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 
@@ -56,7 +72,8 @@ public class YandexApiExe implements Translator {
 
             properties.load(input);
             input.close();
-            yandexApiKey = properties.getProperty("yandexKey");
+            //yandexApiKey = properties.getProperty("yandexKey");
+            yandexApiKey = "trnsl.1.1.20180101T103022Z.a3ec12ad40f2085c.ee440ea7adc10858247b5143e69e4185fdb9eb65";
     }
 
     public static YandexApiExe getInstance() throws Exception{
@@ -72,7 +89,19 @@ public class YandexApiExe implements Translator {
         return localInstance;
     }
 
-    public String doGetTranslatedWord(String wordForTranslate) throws Exception {
+    //Object[] arguments = { wordForTranslate };
+
+
+/*    @Override
+    public String doGetTranslatedWord(Object... objects) throws Exception {
+        return null;
+    }*/
+
+    public String doGetTranslatedWord(Object... inputWordForTranslate) throws Exception {
+        String wordForTranslate = (String) inputWordForTranslate[0];
+
+        Boolean useProxy = (Boolean) inputWordForTranslate[1];
+
         String result = "";
         String resolvedLn;
         DbConnector connector = DbConnector.getInstance();
@@ -82,8 +111,13 @@ public class YandexApiExe implements Translator {
 
         result = connector.doGetTranslatedWordFromDb(wordForTranslate, resolvedLn);
 
+        //if(result.equals("") || result == null) {
         if(result.equals("")) {
-            result = doTranslate(wordForTranslate);
+            if (useProxy) {
+                result = doTranslateViaProxy(wordForTranslate);
+            } else {
+                result = doTranslate(wordForTranslate);
+            }
             connector.doInsertToDbResult(wordForTranslate, resolvedLn, result);
         }
         connector.closeConnection(connector.getConnection());
@@ -91,10 +125,35 @@ public class YandexApiExe implements Translator {
         return result;
     }
 
+    public String doTranslateViaProxy(String wordForTranslate) throws Exception {
+
+        String result;
+        CredentialsProvider credsProvider;
+        HttpEntity entity;
+
+        CredentialSetter credentialSetter = CredentialSetter.getInstance();
+        credsProvider = credentialSetter.getCredentials();
+
+        //---------  SSL --------------------
+        RequestCreator requestCreator = new RequestCreator();
+        RequestConfig config = requestCreator.getRequestConfig();
+
+        //HTTP GET
+        //HttpGet get = new HttpGet("https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20180101T103022Z.a3ec12ad40f2085c.ee440ea7adc10858247b5143e69e4185fdb9eb65&text=town&lang=en-ru");
+        HttpGet get = new HttpGet(uriCreator(wordForTranslate));
+        get.setConfig(config);
+
+        entity = requestCreator.getEntity(get, credsProvider);
+
+        result = doJsonParse(entity);
+
+        return result;
+    }
+
     public String doTranslate(String wordForTranslate) throws Exception{
 
         String result;
-        HttpResponse httpResponse = null;
+        HttpResponse httpResponse;
         //HttpGet get = new HttpGet("https://translate.yandex.net/api/v1.5/tr.json/translate?key=!!KEY!!&text=town&lang=en-ru");
         HttpGet get = new HttpGet(uriCreator(wordForTranslate));
         HttpClient httpClient = HttpClients.createDefault();
@@ -103,11 +162,6 @@ public class YandexApiExe implements Translator {
 
         result = doJsonParse(entity);
 
-        if(result.equals("")) {
-            LOG.error(String.format("Req = %s.Result in null.", wordForTranslate));
-        } else {
-            LOG.info(String.format("Req = %s. Result in not null.", wordForTranslate));
-        }
         return result;
     }
 
@@ -120,6 +174,7 @@ public class YandexApiExe implements Translator {
         Object resultObject = parser.parse(json);
 
         JSONObject obj = (JSONObject) resultObject;
+
         String raw = obj.get("text").toString();
 
         parsedString = raw.substring(2, raw.length() - 2);
